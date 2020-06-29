@@ -1,8 +1,12 @@
 ### Nginx Localhost SSL conf
 
+This HOWTO repo spawned from a [tweet thread](https://twitter.com/diybyo/status/1277705913386713088) about how to use Webpacker and Rails with SSL in local dev mode. The inspiration for this approach is based on a simple idea: if your Rails app won't be serving TLS in production (eg. if TLS is terminated by a load balancer or traffic shaping appliance that sits in front of the app), then the Rails app ought not be made responsible either, for terminating TLS in development mode!
+
+The provided nginx configuration demonstrates a basic application of the Reverse Proxy mode, serving traffic on http://localhost and https://localhost, (your browser will probably choose the HTTPS path by default, in 2020) - then ultimately forwards the packets to an HTTP server on localhost port 3000, (the port that Rails Server listens on by default.)
+
 Instructions:
 
-* review [nginx.conf](nginx.conf)
+* review [nginx.conf](nginx.conf) - some strings may need to be changed here
 * review the article at [domysee](https://www.domysee.com/blogposts/reverse-proxy-nginx-docker-compose) where this config was derived from, for further insight into how this config is meant to be used
 * (the configuration that I have used does not exercise all the features)
 * `cd ssl/`
@@ -25,4 +29,4 @@ At this point, four new files have been created:
 
 If your user accepts the "Ignore Certificate Issues" warning from their browser, or if you can ensure their certificate chain (or if OS trust is configured) permitting trusting of certificates signed by `rootCA.pem`, then you will be able to use `localhost.crt` and `localhost.key` inside of nginx.conf to perform SSL termination for your app.
 
-More attention paid to the caching section of the configuration is desirable. In this example I have disabled all caching and pass every request through to the Rails app, (so you may have to reconfigure Rails to serve static assets. See `serve_static_files` or `serve_static_assets` in the [Rails Guide](https://guides.rubyonrails.org/v4.2/configuring.html#rails-general-configuration) - this configuration is especially undesirable for production, unless nginx caching has also been configured. (For a local dev, it is probably fine, as the browser will most likely be able to take care of the caching after a few tries.)
+More attention paid to the caching section of the configuration is desirable. In this example I have disabled all caching and pass every request through to the Rails app, (so you may have to reconfigure Rails to serve static assets.) See `serve_static_files` or `serve_static_assets` in the [Rails Guide](https://guides.rubyonrails.org/v4.2/configuring.html#rails-general-configuration) - this configuration is especially undesirable for production, unless nginx caching has also been configured. (For a local dev, it is probably fine, as the browser will most likely be able to take care of the caching after a few tries.)
