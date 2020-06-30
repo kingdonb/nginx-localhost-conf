@@ -30,3 +30,9 @@ At this point, four new files have been created:
 If your user accepts the "Ignore Certificate Issues" warning from their browser, or if you can ensure their certificate chain (or if OS trust is configured) permitting trusting of certificates signed by `rootCA.pem`, then you will be able to use `localhost.crt` and `localhost.key` inside of nginx.conf to perform SSL termination for your app.
 
 More attention paid to the caching section of the configuration is desirable. In this example I have disabled all caching and pass every request through to the Rails app, (so you may have to reconfigure Rails to serve static assets.) See `serve_static_files` or `serve_static_assets` in the [Rails Guide](https://guides.rubyonrails.org/v4.2/configuring.html#rails-general-configuration) - this configuration is especially undesirable for production, unless nginx caching has also been configured. (For a local dev, it is probably fine, as the browser will most likely be able to take care of the caching after a few tries.)
+
+## UPDATE
+
+Since I mostly took this nginx config example from somewhere else, and it uses or mentions a lot of features that I admitted that I am not using, I have added the localhost config that I am actually using for my single-app SSL setup in the directory [nginx/](nginx/). There are two files instead of one, you can put [nginx/localhost.conf](nginx/localhost.conf) into a `servers/` subdirectory of `/etc/nginx` and it is referred to from [nginx/nginx.conf](nginx/nginx.conf), which is placed directly into `/etc/nginx`.
+
+You might be able to use it without modification instead. If you are on MacOS, `brew install nginx` and those files go into `/usr/local/etc/nginx/` where they are picked up by `brew services`. (Try `sudo brew services start nginx`). Good luck, and mash that Issues button or submit fixes as a PR if something doesn't look right or immediately work for you!
